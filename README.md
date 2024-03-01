@@ -9,8 +9,6 @@ This repository provides description of a published dataset designed for this ta
 ### Dataset overview
 The 6DoF SELD Dataset is a SELD dataset for detecting and localizing sound events from the view of self-motion humans. Unlike conventional SELD datasets using fixed microphone arrays or wearable SELD datasets using HATS, sound events are recorded by a headphone-type device worn by a subject performing 6DoF self-motion (walking and looking around). The headphone-type device is equipped with an 18-channel microphone array and three motion tracking sensors. The motion tracking sensors allow the head's position and posture to be observed. The position and posture acquired by the motion tracking sensors can be time differentiated to simulate the observation of head motion by more practical sensors, such as a 6-axis inertial measurement unit (IMU).
 
-### Folder Structure 
-
 ### Recording details
 The following figure shows the recording setup and equipment configuration for the 6DoF SELD Dataset. 
 ![setup-1](https://github.com/nttrd-mdlab/6dof-seld/assets/72438001/441bda8b-2018-4f9e-997c-a1e886348db9)
@@ -26,6 +24,70 @@ The following table shows the specifications of the 6DoF SELD dataset and the co
 The dataset is divided into three subsets ("stat.", "3DoF", and "6DoF") according to the state of self-motion: in "stat." the subject remains seated in a chair; in "3DoF" the subject performs head and body rotation movements while standing, and in "6DoF" the subject performs a 0.5 m rotation movement. They walk, change direction, and turn in a circle of 75 m. In "6DoF," subjects walk, change direction, and turn in a circle of 75 m. The signal-to-noise ratio (SNR) was controlled to 6, 10, and 20 dB. The recording room is equipped with a variable reverberation chamber, with reverberation time controlled in three steps ($T_{60}^{500Hz} = 0.12, 0.30, 0.41$ sec).
 
 All microphones used for recording were Hosiden KUB4225 with a sampling frequency of 48k and a bit depth of 16 bits; the motion tracking sensor was a combination of HTC Vive Tracker (2018) and HTC SteamVR Base Station 2.0. Sensor signals were recorded at a non-uniform sampling rate of approximately 40 fps and then downsampled to a uniform sampling rate of 20 fps.
+
+
+### Folder Structure 
+#### Folder tree
+````
+6DoFSELDDataset
+├── recinfo.csv
+├── train
+│   ├── audio
+│   ├── head_tracker
+│   ├── metadata
+│   │   ├── metadata_abs
+│   │   └── metadata_rel
+│   ├── rawdata
+│   │   ├── head_tracker_raw
+│   │   ├── metadata_raw
+│   │   └── source_tracker_raw
+│   └── tracker_cor
+│       ├── head_tracker_cor
+│       └── source_tracker_cor
+│           └── source_tracker
+├── valid (same structure with train)
+└── test (same structure with train)
+````
+#### Naming convention
+All files are named using the following naming convention:
+
+`room[room id]_action[action id]_snr[snr]_s[# of source]_sbj[subject id]_recid[recording id]`
+
+- room id
+    - The differences in variable reverberation room settings: `1: $T_{60}^{500Hz} = 0.12$ sec, 2: $T_{60}^{500Hz} = 0.30$ sec, 3: $T_{60}^{500Hz} = 0.41$ sec `
+
+- action id
+    - The differences in the motion of subject: `1: "Stationary", 2: "3DoF", 3: "6DoF"`
+
+- snr
+    - Signal-to-Noise Ratio: `-6dB, -10dB, -20dB`
+
+- subject_id
+    - `a, b, c`
+
+#### Description of each folder and files
+- audio
+    - Wav files of acoustic signals recorded with 18ch microphones　(16bit, 48k)
+
+- head_tracker
+    - Data for the three trackers of the head, which are distinguished by the suffixes as follows: `"T": top, "L": Left, "R": Right`
+    - This data is the raw data with the following processing
+        1. corrected for distortion near the edges of the tracking area based on calibration measurements
+        2. the original data, which is sampled at unequal intervals, is resampled at equal intervals to 40 fps (aliasing effects are taken into account).
+
+- metadata
+  - Metadata of recoded sound events denoted in the following format:
+ `timeframe,class,track,azimuth,elevation,distance`
+
+  - The source location information is calculated as follows:
+    - metadata_abs: Absolute coordinates of the sound source with origin at the center of the room (computed from 'source_tracker')
+    - metadata_rel: Relative coordinates of the sound source with respect to head (computed from 'source_tracker' and 'head_tracker')
+
+- rawdata
+    - Rawdata of motion tracker
+
+- tracker_cor
+  - Corrected rawdata of motion tracker. (corrected for distortion near the edges of the tracking area based on calibration measurements)
 
 ## Citation
 M. Yasuda, S. Saito, A. Nakayama, and N. Harada, "6DoF SELD : SOUND EVENT LOCALIZATION AND DETECTION USING MICROPHONES AND MOTION TRACKING SENSORS ON SELF-MOTIONING HUMAN", ICASSP2024 (accepted).
