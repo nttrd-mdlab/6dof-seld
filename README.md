@@ -93,4 +93,4 @@ All files are named using the following naming convention:
 M. Yasuda, S. Saito, A. Nakayama, and N. Harada, "6DoF SELD : SOUND EVENT LOCALIZATION AND DETECTION USING MICROPHONES AND MOTION TRACKING SENSORS ON SELF-MOTIONING HUMAN", ICASSP2024 (accepted).
 
 ## Contact
-masahiro.yasuda@ntt.com (Masahiro Yasuda)
+masahiro.yasuda[at]ntt.com (Masahiro Yasuda)
